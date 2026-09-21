@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ensiklopedia Sisingaan Bagian 7</title>
+  
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const sceneEl = document.querySelector('a-scene');
+
+      // 1. Ambil target entity masing-masing halaman
+      const target0 = document.querySelector('#target0');
+      const target1 = document.querySelector('#target1');
+      const target2 = document.querySelector('#target2');
+      const target3 = document.querySelector('#target3');
+      const target4 = document.querySelector('#target4');
+  
+      // 2. Ambil audio & video masing-masing halaman
+      const audio29 = document.querySelector('#audio_atraksi');
+      const audio31 = document.querySelector('#audio_penutup');
+      const audio33 = document.querySelector('#audio_ngedeprak');
+      const audio34 = document.querySelector('#audio_galura');
+      const audio35 = document.querySelector('#audio_ewag');
+
+      // Unmute & Unlock Audio/Video secara otomatis pada sentuhan/klik pertama di layar
+      const unlockMediaOnFirstTouch = () => {
+        // Unlock Audio
+        [audio29, audio31, audio33, audio34, audio35].forEach(audio => {
+          if (audio) {
+            audio.play().then(() => {
+              audio.pause();
+              audio.currentTime = 0;
+            }).catch(() => {});
+          }
+        });
+
+        // Unlock Video 
+        [].forEach(video => {
+          if (video) {
+            video.muted = false;
+            video.play().then(() => {
+              video.pause();
+              video.currentTime = 0;
+            }).catch(() => {});
+          }
+        });
+
+        window.removeEventListener('touchstart', unlockMediaOnFirstTouch);
+        window.removeEventListener('click', unlockMediaOnFirstTouch);
+      };
+
+      window.addEventListener('touchstart', unlockMediaOnFirstTouch, { once: true });
+      window.addEventListener('click', unlockMediaOnFirstTouch, { once: true });
+
+      // Helper Listener Audio
+      function setupAudioTarget(targetEl, audioEl) {
+        if (!targetEl || !audioEl) return;
+
+        targetEl.addEventListener("targetFound", () => {
+          audioEl.play().catch(e => console.log("Autoplay audio terhalang: ", e));
+        });
+
+        targetEl.addEventListener("targetLost", () => {
+          audioEl.pause();
+          audioEl.currentTime = 0;
+        });
+      }
+
+      // Helper Listener Video
+      function setupVideoTarget(targetEl, videoEl) {
+        if (!targetEl || !videoEl) return;
+
+        targetEl.addEventListener("targetFound", () => {
+          videoEl.play().catch(e => {
+            console.log("Autoplay video terhalang, mencoba memutar tanpa suara...", e);
+            videoEl.muted = true; // Fallback jika browser tetap memblokir audio video
+            videoEl.play();
+          });
+        });
+
+        targetEl.addEventListener("targetLost", () => {
+          videoEl.pause();
+          videoEl.currentTime = 0;
+        });
+      }
+
+      // Pasang Listener Audio
+      setupAudioTarget(target0, audio29);
+      setupAudioTarget(target1, audio31);
+      setupAudioTarget(target2, audio33);
+      setupAudioTarget(target3, audio34);
+      setupAudioTarget(target4, audio35);
+    
+      // Pasang Listener Video
+
+    });
+  </script>
+</head>
+<body style="margin: 0; overflow: hidden;">
+
+<a-scene 
+    gltf-model="dracoDecoderPath: https://www.gstatic.com/draco/v1/decoders/;"
+    mindar-image="imageTargetSrc: ./targets.mind; filterMinCF: 0.0001; filterBeta: 0.001; missTolerance: 12;" 
+    vr-mode-ui="enabled: false" 
+    device-orientation-permission-ui="enabled: false">
+
+  <a-assets>
+    <!-- Target 0: Halaman 29 -->
+    <a-asset-item id="atraksi1Model29" src="./halaman 29/compressed-atraksi1.glb"></a-asset-item>
+    <a-asset-item id="atraksi2Model29" src="./halaman 29/compressed-atraksi2.glb"></a-asset-item>
+    <a-asset-item id="berguling_loncatModel29" src="./halaman 29/compressed-berguling_loncat.glb"></a-asset-item>
+    <a-asset-item id="bergulingModel29" src="./halaman 29/compressed-berguling.glb"></a-asset-item>
+    <a-asset-item id="slidingModel29" src="./halaman 29/compressed-sliding depan.glb"></a-asset-item>
+    <audio id="audio_atraksi" src="./halaman 29/atraksi 29 audio.mp3" preload="auto"></audio>
+
+    <!-- Target 1: Halaman 31 -->
+    <img id="pertanyaanModel31" src="./halaman 31/pertanyaan.png"></img>
+    <img id="khitananModel31" src="./halaman 31/khitanan.png"></img>
+    <img id="penyambutanModel31" src="./halaman 31/penyambutan.png"></img>
+    <img id="pernikahanModel31" src="./halaman 31/pernikahan.png"></img>
+    <audio id="audio_penutup" src="./halaman 31/penutup 31 audio.mp3" preload="auto"></audio>
+
+    <!-- Target 2: Halaman 33 -->
+    <a-asset-item id="patungModel33" src="./halaman 33/compressed-patung_singa.glb"></a-asset-item>
+    <a-asset-item id="lutut1Model33" src="./halaman 33/compressed-lutut1.glb"></a-asset-item>
+    <audio id="audio_ngedeprak" src="./halaman 33/ngedeprak 33 audio.mp3" preload="auto"></audio>
+
+    <!-- Target 3: Halaman 34 -->
+    <a-asset-item id="patungModel34" src="./halaman 33/compressed-patung_singa.glb"></a-asset-item>
+    <a-asset-item id="pemikulModel34" src="./halaman 34/compressed-pemikul halaman 4.glb"></a-asset-item>
+    <audio id="audio_galura" src="./halaman 34/galura 34 audio.mp3" preload="auto"></audio>
+
+    <!-- Target 4: Halaman 35 -->
+    <a-asset-item id="bungkukModel35" src="./halaman 35/compressed-bungkuk.glb"></a-asset-item>
+    <audio id="audio_ewag" src="./halaman 35/ewag audio.mp3" preload="auto"></audio>
+
+  </a-assets>
+
+  <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+  <!-- TARGET 0 (Halaman 29) -->
+  <a-entity id="target0" mindar-image-target="targetIndex: 0">
+    <a-gltf-model src="#atraksi1Model29" position="0 0 0" scale="0.6 0.6 0.6" rotation="90 0 0" animation-mixer></a-gltf-model>
+    <a-gltf-model src="#atraksi2Model29" position="0.1 -0.31 0.4" scale="0.27 0.27 0.27" rotation="90 0 0" animation-mixer></a-gltf-model>
+    <a-gltf-model src="#berguling_loncatModel29" position="0.3 -0.5 0" scale="0.3 0.3 0.3" rotation="90 0 0" animation-mixer></a-gltf-model>
+    <a-gltf-model src="#bergulingModel29" position="-0.3 -0.5 0" scale="0.3 0.3 0.3" rotation="90 0 0" animation-mixer></a-gltf-model>
+    <a-gltf-model src="#slidingModel29" position="0 -0.5 0" scale="0.3 0.3 0.3" rotation="90 0 0" animation-mixer></a-gltf-model>
+  </a-entity>
+
+  <!-- TARGET 1 (Halaman 31) -->
+  <a-entity id="target1" mindar-image-target="targetIndex: 1">
+    <a-image src="#pertanyaanModel31" position="0 0.3 0" scale="0.3 0.3 0.3" rotation="0 0 0"></a-image>
+    <a-image src="#khitananModel31" position="0 -0.2 0" scale="0.3 0.3 0.3" rotation="0 0 0"></a-image>
+    <a-image src="#penyambutanModel31" position="0.6 -0.2 0" scale="0.3 0.3 0.3" rotation="0 0 0"></a-image>
+    <a-image src="#pernikahanModel31" position="-0.6 -0.2 0" scale="0.3 0.3 0.3" rotation="0 0 0"></a-image>
+  </a-entity>
+
+  <!-- TARGET 2 (Halaman 33) -->
+  <a-entity id="target2" mindar-image-target="targetIndex: 2">
+    <a-gltf-model src="#patungModel34" position="-0.05 -0.1 0.7" scale="0.4 0.4 0.4" rotation="90 0 0" animation-mixer></a-gltf-model>
+    <a-gltf-model src="#lutut1Model33" position="-0.3 -0.44 0" scale="0.5 0.5 0.5" rotation="90 0 0" animation-mixer></a-gltf-model>
+    <a-gltf-model src="#lutut1Model33" position="0.26 -0.44 0" scale="0.5 0.5 0.5" rotation="90 0 0" animation-mixer></a-gltf-model>
+    <a-gltf-model src="#lutut1Model33" position="-0.3 0.2 0" scale="0.5 0.5 0.5" rotation="90 0 0" animation-mixer></a-gltf-model>
+    <a-gltf-model src="#lutut1Model33" position="0.26 0.2 0" scale="0.5 0.5 0.5" rotation="90 0 0" animation-mixer></a-gltf-model>
+  </a-entity>
+
+  <!-- TARGET 3 (Halaman 34) -->
+  <a-entity id="target3" mindar-image-target="targetIndex: 3">
+    <a-gltf-model src="#patungModel34" position="-0.1 -0.095 0.87" scale="0.4 0.4 0.4" rotation="90 0 0" animation-mixer></a-gltf-model>
+    <a-gltf-model src="#pemikulModel34" position="-0.3 -0.44 0" scale="0.5 0.5 0.5" rotation="90 0 0" animation-mixer></a-gltf-model>
+    <a-gltf-model src="#pemikulModel34" position="0.26 -0.44 0" scale="0.5 0.5 0.5" rotation="90 0 0" animation-mixer></a-gltf-model>
+    <a-gltf-model src="#pemikulModel34" position="-0.3 0.2 0" scale="0.5 0.5 0.5" rotation="90 0 0" animation-mixer></a-gltf-model>
+    <a-gltf-model src="#pemikulModel34" position="0.26 0.2 0" scale="0.5 0.5 0.5" rotation="90 0 0" animation-mixer></a-gltf-model>
+  </a-entity>
+
+  <!-- TARGET 4 (Halaman 35) -->
+  <a-entity id="target4" mindar-image-target="targetIndex: 4">
+    <a-gltf-model src="#bungkukModel35" position="-0.3 -0.44 0" scale="0.5 0.5 0.5" rotation="90 0 0" animation-mixer></a-gltf-model>
+    <a-gltf-model src="#bungkukModel35" position="0.26 -0.44 0" scale="0.5 0.5 0.5" rotation="90 0 0" animation-mixer></a-gltf-model>
+    <a-gltf-model src="#bungkukModel35" position="-0.3 0.18 0" scale="0.5 0.5 0.5" rotation="90 0 0" animation-mixer></a-gltf-model>
+    <a-gltf-model src="#bungkukModel35" position="0.26 0.18 0" scale="0.5 0.5 0.5" rotation="90 0 0" animation-mixer></a-gltf-model>
+  </a-entity>
+
+</a-scene>
+
+</body>
+</html>
